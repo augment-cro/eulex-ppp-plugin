@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "treatment-api": {
+      "type": "http",
+      "url": "${TREATMENT_API_URL:-https://treatment-api-5s5qu3wura-ez.a.run.app/mcp}",
+      "headers": {
+        "X-API-Key": "${TREATMENT_API_KEY}"
+      }
+    }
+  }
+}
