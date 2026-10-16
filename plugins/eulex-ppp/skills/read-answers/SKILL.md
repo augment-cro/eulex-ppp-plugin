@@ -58,6 +58,7 @@ Who can move it:
 | `no_common_use` | no single use admits every spray of the product, so count and interval cannot be judged | nobody; say so |
 | `no_statement_applies` | no limit statement of the use applies to the spray as described | read with `explain` |
 | `unknown_attribute`, `typed_missing`, `text_only`, `attribute_not_testable`, `ambiguous_statements` | the register text is not typed well enough for the ruler | you can pull it, with the grower's consent (see Escalation); not the grower |
+| `target_unresolved` | the target sent pairs with none of the use's register targets; the finding carries the register's phrases (`register_targets`) and what was sent (`sent`) | you: `resolve_term` with the register's phrase, then check again (see `check-season` §2); not escalatable |
 | `genus_level` | the use names the crop only at genus level and the check did not settle it for the grower's crop | give the four parts below; you can pull it, with the grower's consent (see Escalation) |
 
 An answer of `unknown` keeps the finding open; that is the correct outcome when the grower
@@ -110,7 +111,9 @@ the use "unsettled" and do not leave it "for the operator to resolve".
 
 `explain` with `finding_id` and `detail: "summary"` (under 8 kB) gives `summary_text`, the
 candidate uses (`uses_table`: which use, which parts open) and `next[]` (the actions:
-`provide_input`, `answer_question`, `escalate`, `reingest`, `signoff`). Call it when:
+`provide_input`, `answer_question`, `resolve_term`, `escalate`, `reingest`, `signoff`), and
+the overlays the finding used, each with its scope: `yours` (settled on this key) or
+`global`. Call it when:
 
 - a finding is open and no question names it (to find the input the grower could give);
 - the grower asks why a spray is `non_compliant` or open.
@@ -148,14 +151,18 @@ the test service.
    and `judge`: your model id as you know it. `invalid_assessment` means the answer was not
    in the schema or named another finding; the job stays pulled, so fix the form and send
    it again without changing the reading.
-5. **Report** the result as returned: `settled` (true or false), the `gate` outcome and its
-   reason (for example `quote_not_found`), the re-evaluated `finding` and its `effect`
-   (`verdict_changed`, `leaves_changed`, `none`), and the re-run's new `check_id`. Say
-   "judged by <model> on your key, as reported by the agent". A result that asks the
-   grower (`ask`, reason `ask_grower`) settles nothing: put the question to the grower.
-   When it settled, say that it now settles this finding for every tester of the service
-   until the operator reviews it. When `settled` is false, report "not settled; the gate
-   did not pass (<reason>)", never that the service accepted or confirmed your reading.
+5. **Report** from the result's `data.result`: `settled` (true or false), `gate` (its
+   `ok` and `reason`, for example `quote_not_found`), `effect` (`verdict_changed`,
+   `leaves_changed`, `none`), the re-run's new `check_id`, and the re-evaluated finding's
+   `verdict`. Do not echo the finding itself; it can run to tens of kB. If the result is too
+   large for your client and is cut or saved to a file, read those fields from what came
+   through; do not call `get_job`, which returns the same result. Report what you could
+   not read as not read. Say "judged by <model> on your key, as reported by the agent". A
+   result that asks the grower (`ask`, reason `ask_grower`) settles nothing: put the
+   question to the grower. When it settled, say that the reading now applies to checks on
+   this grower's key (`overlay_scope`), and to every tester only once the operator promotes
+   it. When `settled` is false, report "not settled; the gate did not pass (<reason>)",
+   never that the service accepted or confirmed your reading.
 
 After a gate failure, do not judge again and do not submit another reading: the finding
 stays open, and you report why. An answer must never be chosen by the verdict it gives.

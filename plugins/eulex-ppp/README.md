@@ -17,8 +17,9 @@ on a genus entry of the register is reported as such, with the register's wordin
 recommendation and the choice to accept it or escalate it. An open finding of a check can
 be escalated on the grower's yes: the agent pulls the job (`pull_escalation`), judges it on
 the grower's own model and subscription, and submits the answer (`submit_escalation`); the
-service's gate decides whether it settles the finding, for every tester until the operator
-reviews it.
+service's gate decides whether it settles the finding. A settled reading applies to checks
+on the grower's own key until the operator promotes it to every tester. A check of a season
+of a dozen sprays answers in about ten seconds.
 
 ## Install
 

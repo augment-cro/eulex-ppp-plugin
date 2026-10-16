@@ -45,9 +45,8 @@ Per treatment (required: `applied_at`, `product_auth_no`, `dose`, `dose_unit`):
 - `target`: the pest, disease or weed the grower names, as a code. Resolve the name with
   `resolve_term` (`kind: "pest"`, the country) and send the resolved `code`. If it comes
   back `ambiguous`, `genus_level` or `unresolved`, try the Latin name, then the code of a
-  candidate the grower confirms; if none fits, send the grower's words and tell the grower
-  the target may stay open. `check_sequence` does not report an unresolved target: the
-  finding stays `indeterminate` with an open `target` and no reason code.
+  candidate the grower confirms; if none fits, send the grower's words. A target the check
+  cannot pair with a use comes back as reason `target_unresolved` (see the loop below).
 - `product_name`, `dose` (number), `dose_unit` (`l/ha`, `kg/ha`), `water_l_per_ha`,
   `area_ha`, `bbch` (integer 0–99): only when the grower gives them.
 - `setting` (`field` for outdoor, `protected` for greenhouse/tunnel), `method`
@@ -57,6 +56,9 @@ Per treatment (required: `applied_at`, `product_auth_no`, `dose`, `dose_unit`):
   says when it needs one.
 
 ## 2. The loop (at most four `check_sequence` calls)
+
+A check of a season of a dozen sprays answers in about ten seconds; a client tool timeout of
+60 s is enough. Send the whole season in one request.
 
 After each call read `data.crop` and `data.warnings[]` first. If `crop.eppo` is `null` or
 `crop.basis` is `genus_level`, the crop did not resolve: go back to the crop step and ask
@@ -94,6 +96,16 @@ the grower does not know. Keep every earlier declaration in the list. If you add
 to a treatment, the sequence changed and every `question_id` changes with it: check again,
 and re-declare the grower's earlier answers against the new ids (same attribute, spray and
 phrase); do not ask the grower twice.
+
+**Targets.** A finding with reason `target_unresolved` names, per use still in play, the
+register's own target phrases (`register_targets`) and what was sent (`sent`); `explain`
+gives the same with the `next` action `resolve_term`. Call `resolve_term` (`kind: "pest"`,
+the country) with the register's phrase. If the phrase is the grower's own wording (the same
+words or the same Latin name), use it; otherwise ask the grower first whether the register's
+phrase names what they sprayed against ("The register names this use against '<phrase>'.
+Is that what you sprayed against?"), and use it only on a yes. Then send the check again
+with that treatment's `target` set to the resolved `code`, or to the register's phrase
+verbatim when `resolve_term` gives no code. `target_unresolved` is not escalatable.
 
 **Stop** when a check raises no new question and the grower has no further figure to give,
 or after the fourth call.
