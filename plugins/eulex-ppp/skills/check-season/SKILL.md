@@ -12,8 +12,8 @@ did not give.** When the grower does not know, the answer is `unknown`.
 ## 0. Before the first check
 
 Call `list_scopes` once. Tell the grower in one line what its `notice` says: this is a test
-service, results are for evaluation and not a basis for a treatment decision, and the rules
-are not signed off.
+service whose rules are not signed off, and results are for evaluation, not a basis for a
+treatment decision.
 
 ## 1. Build the request from what the grower said
 
@@ -101,4 +101,6 @@ or after the fourth call.
 ## 3. Report
 
 Use the `read-answers` skill: the verdict per rule group, what is decided, what stays open
-and why, and the notice. Name the `check_id`. Do not call `escalate`; that is the operator's.
+and why, and the notice. Name the `check_id`. Do not call `escalate`: escalation is
+switched off on the test service, and the report names the open findings the operator can
+escalate.

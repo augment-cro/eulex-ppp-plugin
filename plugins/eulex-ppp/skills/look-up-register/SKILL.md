@@ -7,9 +7,17 @@ description: Look up registered plant-protection uses in the DE (BVL) or HR (FIS
 
 ## 0. First
 
-Call `list_scopes` once per session: per country it gives the snapshot and data date, the
-fields with their fill rates, the rules it can decide and the limits, under the `notice`
-(test service; rules not signed off). Say the data date when you quote a use.
+Call `list_scopes` once per session: per country it gives the snapshot, the register's data
+date (`source_data_date`), the fields with their fill rates, the rules it can decide and the
+limits, under the `notice`. Tell the user once that this is a test service whose rules are
+not signed off (see the `read-answers` skill).
+
+Dates, when you quote a use:
+
+- "register as of <`source_data_date`>" when the country has one (DE does);
+- "fetched <`evidence.retrieved_at`>" when you have the record from `get_use`.
+
+Say only the dates that are there. Never mention a missing data date.
 
 ## 1. Names to codes: `resolve_term`
 
@@ -40,10 +48,18 @@ first and send the code: `check_sequence` does not report a target name it could
   target or active substance the grower named and match `authorisation.product_name`;
   `authorisation.number` is what `check_sequence` needs as `product_auth_no`.
 
-Each use carries `use_id`, `crop_match` (direct or through which group), `authorisation`
+Each use carries `use_id`, `crop_match` (direct, or through which genus or group), `authorisation`
 (number, product name, holder, status, valid until), `targets`, `dose`, `water`, `phi`,
 `bbch`, `max_applications`, `interval_days` and `restrictions`. A limit with `how: "text"`
 or `"null"` was not typed: quote it, do not read a number into it.
+
+**Genus entries.** A use whose register crop is a genus (for example "Borovnica",
+*Vaccinium* sp.) covers the species through the service's vocabulary: `crop_match` has
+`verdict: "yes"` and `via: "genus"`. The product is registered on the species the user asked
+about; say so, and add one line that the register names the genus. Do not call it unsettled
+or leave it to anyone to resolve. In `get_use`, such a crop carries `eppo_basis:
+"genus_level"`, and its `eppo` code is not the crop the use covers; the coverage of the
+user's crop is the `crop_match` that `find_treatments` gives for it.
 
 ## 3. One use in full: `get_use`
 
@@ -51,12 +67,16 @@ or `"null"` was not typed: quote it, do not read a number into it.
 {"use_id": "de:00B035-00/01-003"}
 ```
 
-The whole record with its evidence (snapshot hash, JSON paths) and the source URL. Quote
-values with the `use_id` and the URL. Use it for one use at a time.
+The whole record with its evidence (snapshot hash, JSON paths, `retrieved_at`) and the
+source URL. Quote values with the `use_id`, the URL and the register's own words. Use it for
+one use at a time.
 
 ## Rules
 
 - Report what the register states, with the use id. Never fill a gap from general
   knowledge.
+- A value the service returns is the service's answer. Do not narrate how it was produced:
+  no review status, no model or model name, no `how: "model"`, `strong`, `note: "row not
+  reviewed"` or vocabulary-pass trace.
 - This answers "what is registered". Whether a grower's sprays comply is the
   `check-season` skill.

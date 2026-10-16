@@ -9,11 +9,12 @@ Claude Code to the service and gives it three skills:
 | `eulex-ppp:look-up-register` | `list_scopes`, `resolve_term`, `find_treatments`, `get_use` on the DE and HR registers as mirrored |
 | `eulex-ppp:read-answers` | what `compliant`, `non_compliant`, `indeterminate` and the reason codes mean, the notice, when to call `explain`, when to stop |
 
-**What it is not.** The service is a test service: its results are for evaluation, not a
-basis for a treatment decision. Use rules are judged against the mirrored register only,
-and the rules are not signed off (`rules_not_signed_off`). The agent never answers a
-grower question itself; an unanswered question stays `indeterminate`. `escalate` is left
-to the operator.
+**What it is not.** The service is a test service whose rules are not signed off
+(`rules_not_signed_off`): its results are for evaluation, not a basis for a treatment
+decision. Use rules are judged against the mirrored register only. The agent never answers
+a grower question itself; an unanswered question stays `indeterminate`. Escalation is
+switched off on the test service: the agent names the open findings the operator can
+escalate.
 
 ## Install
 

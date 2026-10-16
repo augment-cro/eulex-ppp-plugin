@@ -1,6 +1,6 @@
 ---
 name: read-answers
-description: Read and explain the answers of the treatment-api MCP - what compliant, non_compliant and indeterminate mean, the reason codes, the notice and rules_not_signed_off, when to call explain, when to stop, and that escalate is for the operator. Use after check_sequence, or when a grower asks why a spray is open or not compliant.
+description: Read and explain the answers of the treatment-api MCP - what compliant, non_compliant and indeterminate mean, the reason codes, the notice and rules_not_signed_off, when to call explain, when to stop, and that escalation is switched off on the test service. Use after check_sequence, or when a grower asks why a spray is open or not compliant.
 ---
 
 # Read the answers
@@ -9,13 +9,17 @@ description: Read and explain the answers of the treatment-api MCP - what compli
 
 Every answer carries a `notice`. Repeat its sense to the grower once per conversation:
 
-- **Test service.** Results are for evaluation, not a basis for a treatment decision.
+- **Test service.** This is a test service whose rules are not signed off
+  (`rules_not_signed_off`). Results are for evaluation, not a basis for a treatment decision.
 - **Mirrored register only.** Use rules are judged against the register as mirrored;
   emergency (Art. 53) authorisations are not covered.
-- **Rules are not signed off** (`rules_not_signed_off`). A breach is reported as found and
-  is not reviewed by anyone yet.
 - **2026 treatments are judged against the current snapshot.** A status or use change
   earlier in 2026 is not seen.
+
+Say it once, then answer. A value the service returns is the service's answer: do not
+narrate how it was produced (no review status, no model or model name, no `how: "model"`,
+`strong`, `note: "row not reviewed"` or vocabulary-pass trace), and do not repeat
+`rules_not_signed_off` per finding.
 
 ## Verdicts
 
@@ -48,6 +52,7 @@ Who can move it:
 | `no_common_use` | no single use admits every spray of the product, so count and interval cannot be judged | nobody; say so |
 | `no_statement_applies` | no limit statement of the use applies to the spray as described | read with `explain` |
 | `unknown_attribute`, `typed_missing`, `text_only`, `attribute_not_testable`, `ambiguous_statements` | the register text is not typed well enough for the ruler | operator (escalation); not the grower |
+| `genus_level` | the use names the crop only at genus level and the check did not settle it for the grower's crop | operator (escalation); not the grower |
 
 An answer of `unknown` keeps the finding open; that is the correct outcome when the grower
 does not know.
@@ -70,8 +75,10 @@ Stop asking when a check raises no new question and the only `next` actions left
 `escalate`, `reingest`, `signoff` or none. Report what stays open and why, by code, in
 plain words. Do not repeat a question the grower answered.
 
-## `escalate` is the operator's
+## Escalation is switched off on the test service
 
-`escalate` and `get_job` start and follow a model job that reads the register text behind
-an open finding. Do not call them for the grower: say the finding is open on the register's
-wording and the operator can escalate it.
+`escalate` runs a model over the register text behind an open finding, and `get_job`
+follows that job. Escalation is switched off on the test service: do not call either tool.
+When a finding stays open on a code the table gives to the operator, name its `finding_id`
+and reason code so the operator can escalate it. Recommend escalation only for such a
+finding of a check; a register lookup has nothing to escalate.
