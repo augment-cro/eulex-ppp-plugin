@@ -54,12 +54,15 @@ Each use carries `use_id`, `crop_match` (direct, or through which genus or group
 or `"null"` was not typed: quote it, do not read a number into it.
 
 **Genus entries.** A use whose register crop is a genus (for example "Borovnica",
-*Vaccinium* sp.) covers the species through the service's vocabulary: `crop_match` has
-`verdict: "yes"` and `via: "genus"`. The product is registered on the species the user asked
-about; say so, and add one line that the register names the genus. Do not call it unsettled
-or leave it to anyone to resolve. In `get_use`, such a crop carries `eppo_basis:
-"genus_level"`, and its `eppo` code is not the crop the use covers; the coverage of the
-user's crop is the `crop_match` that `find_treatments` gives for it.
+*Vaccinium* sp.) has `crop_match` `verdict: "yes"` and `via: "genus"`: the service counts it
+for the species the user asked about. List such uses apart from the uses that name the
+species, and give the four parts of the `read-answers` skill (caveat, the discrepancy in the
+register's words, the recommendation, accept or escalate) once for the group, naming the
+products. A lookup has no finding to escalate: a genus reading the grower disputes is
+recorded as a note for the operator. In `get_use`, such a crop carries `eppo_basis: "genus_level"` and a `genus`; its
+`eppo` code, if one is given, is not the crop the use covers. The coverage of the user's
+crop is the `crop_match` that `find_treatments` gives for that `use_id`, and the four parts
+apply to the record too.
 
 ## 3. One use in full: `get_use`
 

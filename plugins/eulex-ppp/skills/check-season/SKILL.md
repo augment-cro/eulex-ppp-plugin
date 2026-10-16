@@ -101,6 +101,23 @@ or after the fourth call.
 ## 3. Report
 
 Use the `read-answers` skill: the verdict per rule group, what is decided, what stays open
-and why, and the notice. Name the `check_id`. Do not call `escalate`: escalation is
-switched off on the test service, and the report names the open findings the operator can
-escalate.
+and why, and the notice. Name the `check_id`.
+
+**Verdicts on a genus entry get their own line**, a `compliant` one included. A finding
+rests on a genus entry when it carries a `crop_basis` (the genus entries it rests on, with
+the register's `label` and `label_lat`), or, where the service gives none, when its `use_id`
+is a use whose `crop_match.via` is `genus` in the
+`find_treatments` results you already have. For a `use_id` you have not seen, call
+`find_treatments` once for the crop, filtered by the product's active substance
+(`detail: "summary"`, `limit` ≤ 10), and read its `crop_match`; do not call `explain` on
+every finding for this. Give that line the four parts of the `read-answers` skill, once per
+use.
+
+For each open finding whose `next` is `escalate`, offer escalation as the `read-answers`
+skill describes (`pull_escalation`, your judgement, `submit_escalation`), only on the
+grower's yes. Report each escalation's outcome with the re-run's `check_id`.
+
+End the report with **Notes**: each genus reading the grower accepted and each settled
+genus reading the grower disputed (for the operator's review), with product and `use_id`.
+A note does not go into `declared[]` and does not change the check. Do not call `escalate`
+or `get_job`.
