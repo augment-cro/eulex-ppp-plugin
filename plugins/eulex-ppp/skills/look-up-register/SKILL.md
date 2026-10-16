@@ -56,13 +56,23 @@ or `"null"` was not typed: quote it, do not read a number into it.
 **Genus entries.** A use whose register crop is a genus (for example "Borovnica",
 *Vaccinium* sp.) has `crop_match` `verdict: "yes"` and `via: "genus"`: the service counts it
 for the species the user asked about. List such uses apart from the uses that name the
-species, and give the four parts of the `read-answers` skill (caveat, the discrepancy in the
-register's words, the recommendation, accept or escalate) once for the group, naming the
-products. A lookup has no finding to escalate: a genus reading the grower disputes is
-recorded as a note for the operator. In `get_use`, such a crop carries `eppo_basis: "genus_level"` and a `genus`; its
-`eppo` code, if one is given, is not the crop the use covers. The coverage of the user's
-crop is the `crop_match` that `find_treatments` gives for that `use_id`, and the four parts
-apply to the record too.
+species, and give these four parts once for the group, naming the products:
+
+1. **Caveat.** These uses rest on a genus entry of the register.
+2. **The discrepancy, in the register's words.** The label and Latin name ("Borovnica",
+   "*Vaccinium* sp."), and the name the register uses for the species on other products
+   ("Američka borovnica" on REVYONA and SWITCH 62,5 WG, the uses with `via: "direct"`).
+3. **Recommendation.** Treat them as registered on the species: the Latin name defines the
+   entry's scope, and a genus covers its species. This is the recommendation; do not tell
+   the user to check the label or the register first.
+4. **The choice.** The user can accept the reading, which you record as a note in your
+   answer, or dispute it. A lookup has no finding to escalate: a disputed reading is
+   recorded as a note for the operator.
+
+The same four parts apply to a `get_use` record of such a use. There the crop carries
+`eppo_basis: "genus_level"` and a `genus`; its `eppo` code, if one is given, is not the crop
+the use covers. The coverage of the user's crop is the `crop_match` that `find_treatments`
+gives for that `use_id`.
 
 ## 3. One use in full: `get_use`
 

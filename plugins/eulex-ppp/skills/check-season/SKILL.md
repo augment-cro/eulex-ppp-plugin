@@ -119,5 +119,6 @@ grower's yes. Report each escalation's outcome with the re-run's `check_id`.
 
 End the report with **Notes**: each genus reading the grower accepted and each settled
 genus reading the grower disputed (for the operator's review), with product and `use_id`.
-A note does not go into `declared[]` and does not change the check. Do not call `escalate`
-or `get_job`.
+Notes are cumulative: each report carries every note of the earlier checks in this
+conversation. A note does not go into `declared[]` and does not change the check. Do not
+call `escalate` or `get_job`.

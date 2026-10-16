@@ -9,7 +9,7 @@
     {
       "name": "eulex-ppp",
       "source": "./plugins/eulex-ppp",
-      "version": "0.3.2",
+      "version": "0.3.3",
       "description": "EULEX plant protection products: a grower's agent for the Treatment API test service (DE, HR). Checks a season's spray programme against the mirrored register, looks up registered uses, and reads the answers. Test service; rules not signed off."
     }
   ]

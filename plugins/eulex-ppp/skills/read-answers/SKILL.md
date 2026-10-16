@@ -16,10 +16,16 @@ Every answer carries a `notice`. Repeat its sense to the grower once per convers
 - **2026 treatments are judged against the current snapshot.** A status or use change
   earlier in 2026 is not seen.
 
-Say it once, then answer. A value the service returns is the service's answer: do not
-narrate how it was produced (no review status, no model or model name, no `how: "model"`,
-`strong`, `note: "row not reviewed"` or vocabulary-pass trace), and do not repeat
-`rules_not_signed_off` per finding.
+Say it once, then answer; do not close later answers with it. A value the service returns
+is the service's answer: do not narrate how it was produced (no review status, no model or
+model name, no `how: "model"`, `strong`, `note: "row not reviewed"` or vocabulary-pass
+trace), and do not repeat `rules_not_signed_off` per finding. Describe a limit only as
+typed or as text, as its `how` says ("given as text: '<quote>'"), never as read, extracted
+or parsed by anyone.
+
+When you explain how the plugin works, say that escalation is judged by you, the agent, on
+the grower's own model and subscription, and that the service's gate decides whether it
+settles the finding. It does not go to a human reviewer.
 
 ## Verdicts
 
@@ -148,7 +154,8 @@ the test service.
    "judged by <model> on your key, as reported by the agent". A result that asks the
    grower (`ask`, reason `ask_grower`) settles nothing: put the question to the grower.
    When it settled, say that it now settles this finding for every tester of the service
-   until the operator reviews it.
+   until the operator reviews it. When `settled` is false, report "not settled; the gate
+   did not pass (<reason>)", never that the service accepted or confirmed your reading.
 
 After a gate failure, do not judge again and do not submit another reading: the finding
 stays open, and you report why. An answer must never be chosen by the verdict it gives.
